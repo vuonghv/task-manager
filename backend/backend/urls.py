@@ -16,6 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from apps.users import views as user_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/register/', user_views.UserRegisterView.as_view()),
+    path('api/login/', user_views.UserLoginView.as_view()),
+    path('api/logout/', user_views.UserLogoutView.as_view()),
+    path('api/me/', user_views.UserDetailView.as_view()),
 ]
