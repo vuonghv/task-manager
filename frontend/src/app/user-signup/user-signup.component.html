@@ -1,10 +1,11 @@
 <div class="row">
   <div class="col-md-6 offset-md-3">
-    <h3>Login Form</h3>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div *ngIf="loginForm.errors" class="alert alert-danger" role="alert">
-        Email or Password is incorrect!
+    <h3>Signup Form</h3>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="signupForm.errors" class="alert alert-danger" role="alert">
+        Signup Failed
       </div>
+      <div *ngIf="isSignupSuccess" class="alert alert-success" role="alert">Signup Successfully</div>
       <div class="form-group">
         <label for="exampleInputEmail1">Email Address</label>
         <input formControlName="email" type="email" class="form-control"
@@ -29,6 +30,25 @@
         <div *ngIf="f.password.errors && (f.password.touched || f.password.dirty)" class="invalid-feedback">
           <div *ngIf="f.password.errors.required">
             Password is required
+          </div>
+          <div *ngIf="f.password.errors.minlength">
+            Password must be at least 6 characters
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleInputPassword2">Confirm Password</label>
+        <input formControlName="confirmPassword" type="password" class="form-control"
+          [ngClass]="{'is-invalid': f.confirmPassword.errors && (f.confirmPassword.touched || f.confirmPassword.dirty)}"
+          id="exampleInputPassword2" placeholder="Confirm Password">
+        <div *ngIf="f.confirmPassword.errors && (f.confirmPassword.touched || f.confirmPassword.dirty)"
+          class="invalid-feedback">
+          <div *ngIf="f.confirmPassword.errors.required">
+            Confirm Password is required
+          </div>
+          <div *ngIf="f.confirmPassword.errors.mustMatch">
+            Password must match
           </div>
         </div>
       </div>
