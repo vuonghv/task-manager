@@ -5,17 +5,13 @@ import { map, tap } from 'rxjs/operators';
 import { AccessToken, User } from './models';
 import { environment as env } from '../environments/environment';
 
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
-
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private readonly userKey = 'currentUser';
-  private accessToken: AccessToken;
   private currentUserSubject: BehaviorSubject<User>;
+  accessToken: AccessToken;
   currentUser: Observable<User>;
 
   constructor(private http: HttpClient) {
@@ -28,12 +24,12 @@ export class UserService {
 
   login(email: string, password: string): Observable<AccessToken> {
     const body = { email: email, password: password }; // tslint:disable-line: object-literal-shorthand
-    return this.http.post<AccessToken>(`${env.apiUrl}/api/login/`, body, httpOptions)
+    return this.http.post<AccessToken>(`${env.apiUrl}/api/login/`, body)
       .pipe(tap(accessToken => {
         // store user info to keep user loggd in between page refreshes
         localStorage.setItem('accessToken', JSON.stringify(accessToken));
         this.accessToken = accessToken;
-        this.getUserInfo(accessToken.key).subscribe(user => {
+        this.getUserInfo().subscribe(user => {
           localStorage.setItem(this.userKey, JSON.stringify(user));
           this.currentUserSubject.next(user);
         });
@@ -41,14 +37,11 @@ export class UserService {
   }
 
   logout(): Observable<any> {
-    const options = {
-      headers: new HttpHeaders({Authorization: `Bearer ${this.accessToken.key}`})
-    };
-    return this.http.post<any>(`${env.apiUrl}/api/logout/`, null, options)
+    return this.http.post<any>(`${env.apiUrl}/api/logout/`, null)
       .pipe(tap(data => {
         // remove access token and notify current user as null
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem(this.userKey);
         this.accessToken = undefined;
         this.currentUserSubject.next(null);
       }));
@@ -56,13 +49,10 @@ export class UserService {
 
   register(email: string, password: string): Observable<User> {
     const body = { email: email, password: password }; // tslint:disable-line: object-literal-shorthand
-    return this.http.post<User>(`${env.apiUrl}/api/register/`, body, httpOptions);
+    return this.http.post<User>(`${env.apiUrl}/api/register/`, body);
   }
 
-  getUserInfo(accessToken: string): Observable<User> {
-    const options = {
-      headers: new HttpHeaders({Authorization: `Bearer ${accessToken}`})
-    };
-    return this.http.get<User>(`${env.apiUrl}/api/me/`, options);
+  getUserInfo(): Observable<User> {
+    return this.http.get<User>(`${env.apiUrl}/api/me/`);
   }
 }
