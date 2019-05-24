@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.utils import timezone
@@ -12,6 +13,7 @@ from apps.users.serializers import (
 
 
 class UserRegisterView(APIView):
+    permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
         serializer = RegisterSerializer(data=request.data)
@@ -32,6 +34,7 @@ class UserRegisterView(APIView):
 
 
 class UserLoginView(APIView):
+    permission_classes = (AllowAny,)
 
     def post(self, request, format=None):
         serializer = LoginSerializer(data=request.data)
@@ -51,7 +54,6 @@ class UserLoginView(APIView):
 
 
 class UserLogoutView(APIView):
-    authentication_classes = (BearerAuthentication,)
 
     def post(self, request, format=None):
         request.auth.delete()
@@ -59,7 +61,6 @@ class UserLogoutView(APIView):
 
 
 class UserDetailView(APIView):
-    authentication_classes = (BearerAuthentication,)
 
     def get(self, request, format=None):
         user_serializer = UserSerializer(request.user)
