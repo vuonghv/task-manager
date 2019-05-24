@@ -39,9 +39,9 @@ export class UserSignupComponent implements OnInit {
           },
           error => {
             this.isSignupSuccess = false;
-            this.signupForm.setErrors({'signupFaled': true});
+            this.signupForm.setErrors({signupFaled: true});
           }
-        )
+        );
   }
 
 }

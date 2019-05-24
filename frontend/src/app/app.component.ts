@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'frontend';
+  constructor() { }
+
+// tslint:disable-next-line: use-life-cycle-interface
+  ngOnInit(): void { }
 }
