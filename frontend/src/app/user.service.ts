@@ -47,6 +47,16 @@ export class UserService {
       }));
   }
 
+  clearLoginSession() {
+    // Like logout() method: remove access token and user info from local storage
+    // But don't send logout API
+    // Use this method when API response 401 status code
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem(this.userKey);
+    this.accessToken = undefined;
+    this.currentUserSubject.next(null);
+  }
+
   register(email: string, password: string): Observable<User> {
     const body = { email: email, password: password }; // tslint:disable-line: object-literal-shorthand
     return this.http.post<User>(`${env.apiUrl}/api/register/`, body);

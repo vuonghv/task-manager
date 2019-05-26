@@ -10,6 +10,7 @@ import { UserSignupComponent } from './user-signup/user-signup.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { HttpConfigInterceptor } from './helpers/http-config.interceptor';
+import { HttpErrorInterceptor } from './helpers/http-error.interceptor';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { HttpConfigInterceptor } from './helpers/http-config.interceptor';
     HttpClientModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
